@@ -4,6 +4,7 @@ import * as storage from "../utils/storage";
 import { config } from "../config";
 import { clear } from "./token.service";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants/storage.constants";
+import log from "loglevel";
 
 export function getUserData(): Token | null {
   try {
@@ -21,6 +22,7 @@ export function getUserData(): Token | null {
       return decodedRefreshToken;
     }
   } catch (err) {
+    log.error(err);
     return null;
   }
 
