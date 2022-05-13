@@ -1,8 +1,8 @@
 import axios from "axios";
 import HttpStatus from "http-status";
+import log from "loglevel";
 
 import { config } from "../config";
-
 import { logout } from "../services/auth.service";
 import {
   getAccessToken,
@@ -54,6 +54,7 @@ function post(
   })
     .then((response) => response)
     .catch((error) => {
+      log.error(error);
       throw new Error(error?.response?.data?.error);
     });
 }
@@ -86,6 +87,7 @@ function put(
   })
     .then((response) => response)
     .catch((error) => {
+      log.error(error);
       throw new Error(error?.response?.data?.error);
     });
 }
@@ -118,6 +120,7 @@ function get(
   })
     .then((response) => response)
     .catch((error) => {
+      log.error(error);
       throw new Error(error?.response?.data?.error);
     });
 }
@@ -150,6 +153,7 @@ function del(
   })
     .then((response) => response)
     .catch((error) => {
+      log.error(error);
       throw new Error(error?.response?.data?.error);
     });
 }
@@ -226,7 +230,7 @@ export async function unauthorizedResponseHandlerInterceptor(err: any) {
     originalRequest.url === REFRESH_TOKEN_URL
   ) {
     logout();
-
+    log.info("Logging out");
     return Promise.reject(err);
   }
 
@@ -235,6 +239,7 @@ export async function unauthorizedResponseHandlerInterceptor(err: any) {
       const refreshToken = getRefreshToken();
 
       if (!refreshToken) {
+        log.info("Logging out");
         logout();
       }
 
@@ -267,6 +272,7 @@ export async function unauthorizedResponseHandlerInterceptor(err: any) {
 
       return await retryRequest;
     } catch (error) {
+      log.error(error);
       logout();
     }
   }
